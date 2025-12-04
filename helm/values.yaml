@@ -1,5 +1,5 @@
 seafile:
-  initMode: false
+  initMode: true
   configs:
     image: seafileltd/seafile-mc
   secretsMap: {} # seafile services secrets env, object
