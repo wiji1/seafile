@@ -33,16 +33,15 @@ spec:
                 secretKeyRef:
                   name: seafile-secret
                   key: JWT_PRIVATE_KEY
+            {{- /* extra env vars */ -}}
+            {{- if .Values.seafile.extraEnv }}
+            {{- toYaml .Values.seafile.extraEnv | nindent 12 }}
+            {{- end }}
           envFrom:
             - configMapRef:
                 name: seafile-env
             - secretRef:
                 name: seafile-secret
-
-            {{- /* extra envs */ -}}
-            {{- if .Values.seafile.extraEnv }}
-              {{- toYaml .Values.seafile.extraEnv | nindent 12 }}
-            {{- end }}
           ports:
             - containerPort: 80
           {{- if include "seafile.seafileDataVolume.enabled" . | eq "true" }}
