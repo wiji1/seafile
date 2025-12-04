@@ -12,7 +12,7 @@ seafile:
         secretKeyRef:
           name: seafile-secret
           key: SEAFILE_MYSQL_DB_PASSWORD
-    - name: INIT_SEAFILE_MYSQL_ROOT_PASSWORD
+    - name: DB_ROOT_PASSWD
       valueFrom:
         secretKeyRef:
           name: seafile-secret
@@ -51,7 +51,7 @@ seafile:
     # for database
     - name: DB_HOST
     - name: SEAFILE_MYSQL_DB_HOST
-    - name: INIT_SEAFILE_MYSQL_ROOT_PASSWORD
+    - name: DB_ROOT_PASSWD
       value: "seafile"
     - name: SEAFILE_MYSQL_DB_PASSWORD
       value: "seafile"
