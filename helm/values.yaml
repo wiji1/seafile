@@ -19,6 +19,10 @@ seafile:
           key: INIT_SEAFILE_MYSQL_ROOT_PASSWORD
     - name: CSRF_TRUSTED_ORIGINS
       value: "https://files.wiji.dev"
+    - name: ALLOWED_HOSTS
+      value: "files.wiji.dev"
+    - name: FORCE_HTTPS_IN_CONF
+      value: "true"
   extraVolumes: []
 
   ingress:
