@@ -19,9 +19,10 @@ seafile:
   env:
     SEAFILE_SERVER_HOSTNAME: "files.wiji.dev"
 
+    DB_HOST: "seafile-mysql"
     SEAFILE_MYSQL_DB_HOST: "seafile-mysql"
-    REDIS_HOST: "seafile-mysql"
-    CLUSTER_INIT_ES_HOST: "seafile-mysql"
+    REDIS_HOST: "127.0.0.1"
+    CLUSTER_INIT_ES_HOST: "127.0.0.1"
 
     INIT_SEAFILE_ADMIN_EMAIL: "admin@seafile.example.com"
 
