@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seafile-mysql
+  namespace: seafile
+  labels:
+    app: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        # Using an official MySQL image
+        image: mysql:8.0
+        env:
+        # --- Root Password (from INIT_SEAFILE_MYSQL_ROOT_PASSWORD in seafile-secret) ---
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: seafile-secret
+              key: INIT_SEAFILE_MYSQL_ROOT_PASSWORD
+
+        # --- Seafile Database Configuration ---
+        - name: MYSQL_DATABASE
+          value: seafile
+        - name: MYSQL_USER
+          value: seafile
+
+        # --- Seafile User Password (from SEAFILE_MYSQL_DB_PASSWORD in seafile-secret) ---
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: seafile-secret
+              key: SEAFILE_MYSQL_DB_PASSWORD
+
+        ports:
+        - containerPort: 3306
+          name: mysql
+
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+          subPath: data
+
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-data-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: seafile-mysql
+  namespace: seafile
+  labels:
+    app: mysql
+spec:
+  type: ClusterIP
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+      targetPort: 3306
