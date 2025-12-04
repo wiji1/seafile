@@ -72,5 +72,3 @@ spec:
         {{- end }}
       {{- end }}
       restartPolicy: Always
-      imagePullSecrets:
-        - name: regcred

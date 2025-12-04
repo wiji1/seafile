@@ -1,6 +1,7 @@
 seafile:
   initMode: true
-  configs: {} # seafile container configurations, object
+  configs:
+    image: seafileltd/seafile-mc
   secretsMap: {} # seafile services secrets env, object
 
   # extra infomations object(frontend, backend)
