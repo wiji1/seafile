@@ -12,7 +12,7 @@ spec:
   tls:
     - hosts:
         - {{ .Values.seafile.env.SEAFILE_SERVER_HOSTNAME }}
-      secretName: overleaf-tls
+      secretName: seafile-tls
   rules:
     - host: {{ .Values.seafile.env.SEAFILE_SERVER_HOSTNAME }}
       http:
@@ -21,6 +21,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: overleaf
+                name: seafile
                 port:
                   number: 80
