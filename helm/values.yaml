@@ -14,6 +14,7 @@ seafile:
 
   config:
     seafileDataVolume:
+      enabled: true
       disablePVC: false
   env:
     SEAFILE_SERVER_HOSTNAME: "files.wiji.dev"
