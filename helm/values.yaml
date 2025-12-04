@@ -65,7 +65,7 @@ seafile:
     - name: SEAFILE_MYSQL_DB_PORT
       value: "3306"
     - name: SEAFILE_MYSQL_DB_USER
-      value: "seafile"
+      value: "seafileadmin"
     - name: SEAFILE_MYSQL_DB_CCNET_DB_NAME
       value: "ccnet_db"
     - name: SEAFILE_MYSQL_DB_SEAFILE_DB_NAME
