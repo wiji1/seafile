@@ -7,7 +7,6 @@ seafile:
   # extra infomations object(frontend, backend)
   extraResources: {}
   extraEnv:
-    extraEnv:
     - name: SEAFILE_MYSQL_DB_PASSWORD
       valueFrom:
         secretKeyRef:
@@ -47,7 +46,6 @@ seafile:
     # for database
     - name: DB_HOST
     - name: SEAFILE_MYSQL_DB_HOST
-    
     - name: SEAFILE_MYSQL_DB_PASSWORD
       value: "seafile"
     - name: SEAFILE_MYSQL_DB_PORT
