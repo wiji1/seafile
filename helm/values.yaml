@@ -12,6 +12,11 @@ seafile:
         secretKeyRef:
           name: seafile-secret
           key: SEAFILE_MYSQL_DB_PASSWORD
+    - name: INIT_SEAFILE_MYSQL_ROOT_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: seafile-secret
+          key: INIT_SEAFILE_MYSQL_ROOT_PASSWORD
   extraVolumes: []
 
   ingress:
@@ -40,6 +45,7 @@ seafile:
     - name: SITE_ROOT
       value: "/"
     - name: SEAFILE_SERVER_HOSTNAME
+    - name: INIT_SEAFILE_MYSQL_ROOT_PASSWORD
     - name: SEAFILE_SERVER_PROTOCOL
       value: "https"
 
