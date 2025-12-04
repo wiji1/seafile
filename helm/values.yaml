@@ -17,6 +17,8 @@ seafile:
         secretKeyRef:
           name: seafile-secret
           key: INIT_SEAFILE_MYSQL_ROOT_PASSWORD
+    - name: CSRF_TRUSTED_ORIGINS
+      value: "https://files.wiji.dev"
   extraVolumes: []
 
   ingress:
