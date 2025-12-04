@@ -9,6 +9,8 @@ seafile:
   extraEnv: []
   extraVolumes: []
 
+  ingress:
+    ingressClassName: traefik
 
   config:
     seafileDataVolume:
