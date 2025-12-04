@@ -18,7 +18,6 @@ seafile:
       disablePVC: false
   env:
     SEAFILE_SERVER_HOSTNAME: "files.wiji.dev"
-
     DB_HOST: "seafile-mysql"
     SEAFILE_MYSQL_DB_HOST: "seafile-mysql"
     REDIS_HOST: "127.0.0.1"
@@ -40,6 +39,7 @@ seafile:
       value: "https"
 
     # for database
+    - name: DB_HOST
     - name: SEAFILE_MYSQL_DB_HOST
     - name: SEAFILE_MYSQL_DB_PORT
       value: "3306"
