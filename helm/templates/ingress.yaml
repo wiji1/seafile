@@ -8,7 +8,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
-  ingressClassName: {{ .Values.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.seafile.ingress.ingressClassName }}
   tls:
     - hosts:
         - {{ .Values.seafile.env.SEAFILE_SERVER_HOSTNAME }}
