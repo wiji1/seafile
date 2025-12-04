@@ -6,7 +6,6 @@ metadata:
   labels:
     app: seafile
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: {{ .Values.seafile.ingress.ingressClassName }}
