@@ -47,7 +47,9 @@ seafile:
     # for database
     - name: DB_HOST
     - name: SEAFILE_MYSQL_DB_HOST
+    
     - name: SEAFILE_MYSQL_DB_PASSWORD
+      value: "seafile"
     - name: SEAFILE_MYSQL_DB_PORT
       value: "3306"
     - name: SEAFILE_MYSQL_DB_USER
