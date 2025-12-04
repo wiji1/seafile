@@ -9,10 +9,6 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: {{ .Values.seafile.ingress.ingressClassName }}
-  tls:
-    - hosts:
-        - {{ .Values.seafile.env.SEAFILE_SERVER_HOSTNAME }}
-      secretName: seafile-tls
   rules:
     - host: {{ .Values.seafile.env.SEAFILE_SERVER_HOSTNAME }}
       http:
