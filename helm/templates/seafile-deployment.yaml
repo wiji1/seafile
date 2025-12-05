@@ -13,15 +13,16 @@ spec:
         app: seafile
     spec:
       enableServiceLinks: false
-      {{- if include "seafile.seafileDataVolume.enabled" . | eq "true" }}
-      initContainers:  
-        - name: set-ownership  
-          image: busybox  
-          command: ['sh', '-c', 'chown -R root:root /shared']  
-          volumeMounts:  
+      {{- if eq (include "seafile.seafileDataVolume.enabled" . | trim) "true" }}
+      initContainers:
+        - name: set-ownership
+          image: busybox
+          command: ['sh', '-c', 'chown -R root:root /shared']
+          volumeMounts:
             - name: seafile-data
               mountPath: /shared
       {{- end }}
+
       containers:
         - name: seafile
           image: {{ include "seafile.image" . }}
@@ -36,20 +37,29 @@ spec:
             {{- if .Values.seafile.extraEnv }}
             {{- toYaml .Values.seafile.extraEnv | nindent 12 }}
             {{- end }}
+
           envFrom:
             - configMapRef:
                 name: seafile-env
             - secretRef:
                 name: seafile-secret
+
           ports:
             - containerPort: 80
-          {{- if include "seafile.seafileDataVolume.enabled" . | eq "true" }}
+
+          {{- if eq (include "seafile.seafileDataVolume.enabled" . | trim) "true" }}
           volumeMounts:
             - name: seafile-data
               mountPath: /shared
+
+            # Only override individual files, not the whole /scripts folder
             - name: seafile-patch-volume
-              mountPath: /scripts
-              readOnly: true
+              mountPath: /scripts/bootstrap.py
+              subPath: bootstrap.py
+            - name: seafile-patch-volume
+              mountPath: /scripts/setup-seafile-mysql.py
+              subPath: setup-seafile-mysql.py
+
             {{- range .Values.seafile.extraVolumes }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
@@ -61,17 +71,30 @@ spec:
               {{- end }}
             {{- end }}
           {{- end }}
+
           resources:
             {{- toYaml .Values.seafile.resources | nindent 12 }}
-      {{- if include "seafile.seafileDataVolume.enabled" . | eq "true" }}
+
+      {{- if eq (include "seafile.seafileDataVolume.enabled" . | trim) "true" }}
       volumes:
         - name: seafile-data
           persistentVolumeClaim:
             claimName: seafile-data
+
         - name: seafile-patch-volume
+          configMap:
+            name: seafile-patch-scripts
+            items:
+              - key: bootstrap.py
+                path: bootstrap.py
+              - key: setup-seafile-mysql.py
+                path: setup-seafile-mysql.py
+
         {{- range .Values.seafile.extraVolumes }}
         - name: {{ .name }}
           {{- toYaml .volumeInfo | nindent 10 }}
         {{- end }}
+
       {{- end }}
+
       restartPolicy: Always
