@@ -47,6 +47,9 @@ spec:
           volumeMounts:
             - name: seafile-data
               mountPath: /shared
+            - name: seafile-patch-volume
+              mountPath: /scripts
+              readOnly: true
             {{- range .Values.seafile.extraVolumes }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
@@ -65,6 +68,12 @@ spec:
         - name: seafile-data
           persistentVolumeClaim:
             claimName: seafile-data
+        - name: seafile-patch-volume
+          configMap:
+            name: seafile-patch-scripts
+            items:
+              - key: bootstrap.py
+                path: bootstrap.py
         {{- range .Values.seafile.extraVolumes }}
         - name: {{ .name }}
           {{- toYaml .volumeInfo | nindent 10 }}
