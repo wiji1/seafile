@@ -69,11 +69,6 @@ spec:
           persistentVolumeClaim:
             claimName: seafile-data
         - name: seafile-patch-volume
-          configMap:
-            name: seafile-patch-scripts
-            items:
-              - key: bootstrap.py
-                path: bootstrap.py
         {{- range .Values.seafile.extraVolumes }}
         - name: {{ .name }}
           {{- toYaml .volumeInfo | nindent 10 }}
