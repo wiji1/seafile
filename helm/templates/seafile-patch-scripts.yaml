@@ -1077,13 +1077,7 @@ data:
             config.set(db_section, 'CONNECTION_CHARSET', 'utf8')
 
             Utils.write_config(config, self.ccnet_conf)
-            time.sleep(1)
-            with open(self.ccnet_conf, 'w') as fp:
-                fp.write('[General]\n')
-
-            self.generate_db_conf()
-
-            Utils.must_mkdir(self.ccnet_dir)
+    
 
         def generate_db_conf(self):
             config = Utils.read_config(self.ccnet_conf)
