@@ -18,17 +18,6 @@ This repository contains a highly specialized Helm chart for running Seafile wit
 - Create secret
 
     ```sh
-    # for pro/cluster
-    kubectl create secret generic seafile-secret --namespace seafile \
-        --from-literal=JWT_PRIVATE_KEY='<required>' \
-        --from-literal=SEAFILE_MYSQL_DB_PASSWORD='<required>' \
-        --from-literal=INIT_SEAFILE_ADMIN_PASSWORD='<required>' \
-        --from-literal=INIT_SEAFILE_MYSQL_ROOT_PASSWORD='<required>' \
-        --from-literal=REDIS_PASSWORD='' \
-        --from-literal=S3_SECRET_KEY='' \ 
-        --from-literal=S3_SSE_C_KEY='' 
-
-    # for ce
     kubectl create secret generic seafile-secret --namespace seafile \
         --from-literal=JWT_PRIVATE_KEY='<required>' \
         --from-literal=SEAFILE_MYSQL_DB_PASSWORD='<required>' \
@@ -65,3 +54,14 @@ This repository contains a highly specialized Helm chart for running Seafile wit
 1. In ArgoCD, open the application
 2. Click **SYNC**
 3. Let ArgoCD deploy the infrastructure components
+
+## Logging In
+The default credentials for the admin user are:
+```
+me@example.com : asecret
+```
+
+After loggin in, you can create a new user and give it administrator access.
+
+> [!WARNING]
+> PLEASE remember to delete or change the password of the default user after the initial login.
