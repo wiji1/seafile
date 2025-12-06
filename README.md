@@ -61,7 +61,7 @@ The default credentials for the admin user are:
 me@example.com : asecret
 ```
 
-After loggin in, you can create a new user and give it administrator access.
+After logging in, you can create a new user and give it administrator access.
 
 > [!WARNING]
 > PLEASE remember to delete or change the password of the default user after the initial login.
