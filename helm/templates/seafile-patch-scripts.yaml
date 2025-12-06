@@ -6,6 +6,7 @@ data:
   # 1. Content for the modified bootstrap.py file
   bootstrap.py: |
     #!/usr/bin/env python3
+    #!/usr/bin/env python3
     #coding: UTF-8
 
     """
@@ -156,29 +157,34 @@ data:
             content
         )
 
-        # Patch 2: Add custom settings to the generate method
-        # Instead of replacing the entire method, we'll add our settings before write_database_config
-        # Find: self.write_database_config(fp)
-        # Add our custom settings before it
-        custom_settings = """fp.write('\\\\n')
+        # Patch 2: Find the generate method and add our custom settings
+        # We need to find the generate method, then add our settings before write_database_config
+
+        # First, extract the generate method
+        generate_pattern = r'(    def generate\(self\):.*?)(self\.write_database_config\(fp\))(.*?(?=\n    def |\nclass |\Z))'
+
+        def replace_generate(match):
+            before = match.group(1)
+            write_db_call = match.group(2)
+            after = match.group(3)
+
+            # Our custom settings to insert
+            custom_settings = """fp.write('\\n')
                 fp.write('SERVICE_URL = "%s://%s"' % (self.get_proto(), ccnet_config.ip_or_domain))
-                fp.write('\\\\n')
-                fp.write('ALLOWED_HOSTS = [\\\\\'%s\\\\\']' % ccnet_config.ip_or_domain)
-                fp.write('\\\\n')
-                fp.write('CSRF_TRUSTED_ORIGINS = "[\\\\\'%s://%s\\\\\']"' % (self.get_proto(), ccnet_config.ip_or_domain))
-                fp.write('\\\\n')
+                fp.write('\\n')
+                fp.write('ALLOWED_HOSTS = [\\\'%s\\\']' % ccnet_config.ip_or_domain)
+                fp.write('\\n')
+                fp.write('CSRF_TRUSTED_ORIGINS = "[\\\'%s://%s\\\']"' % (self.get_proto(), ccnet_config.ip_or_domain))
+                fp.write('\\n')
                 fp.write('CSRF_COOKIE_SECURE = True')
-                fp.write('\\\\n')
-                fp.write('SECURE_PROXY_SSL_HEADER = (\\\\\'HTTP_X_FORWARDED_PROTO\\\\\', \\\\\'https\\\\\')')
-                fp.write('\\\\n')
+                fp.write('\\n')
+                fp.write('SECURE_PROXY_SSL_HEADER = (\\\'HTTP_X_FORWARDED_PROTO\\\', \\\'https\\\')')
+                fp.write('\\n')
                 """
 
-        # Insert our custom settings before self.write_database_config(fp)
-        content = re.sub(
-            r'(\s+)(self\.write_database_config\(fp\))',
-            custom_settings + r'\1\2',
-            content
-        )
+            return before + custom_settings + write_db_call + after
+
+        content = re.sub(generate_pattern, replace_generate, content, flags=re.DOTALL, count=1)
 
         with open(script_path, 'w') as f:
             f.write(content)
