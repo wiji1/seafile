@@ -6,7 +6,6 @@ data:
   # 1. Content for the modified bootstrap.py file
   bootstrap.py: |
     #!/usr/bin/env python3
-    #!/usr/bin/env python3
     #coding: UTF-8
 
     """
@@ -135,7 +134,7 @@ data:
         """
         Patch setup-seafile-mysql.py to:
         1. Disable MySQL host validation
-        2. Modify the generate method to add custom settings
+        2. Modify the generate method to add custom settings with forced HTTPS
         """
         script_path = get_script('setup-seafile-mysql.py')
 
@@ -165,13 +164,13 @@ data:
             write_db_call = match.group(2)
             after = match.group(3)
 
-            # Our custom settings to insert
+            # Our custom settings to insert - FORCE HTTPS
             custom_settings = """fp.write('\\n')
-                fp.write('SERVICE_URL = "%s://%s"' % (self.get_proto(), ccnet_config.ip_or_domain))
+                fp.write('SERVICE_URL = "https://%s"' % ccnet_config.ip_or_domain)
                 fp.write('\\n')
                 fp.write('ALLOWED_HOSTS = [\\\'%s\\\']' % ccnet_config.ip_or_domain)
                 fp.write('\\n')
-                fp.write('CSRF_TRUSTED_ORIGINS = [\\\'%s://%s\\\']' % (self.get_proto(), ccnet_config.ip_or_domain))
+                fp.write('CSRF_TRUSTED_ORIGINS = [\\\'https://%s\\\']' % ccnet_config.ip_or_domain)
                 fp.write('\\n')
                 fp.write('CSRF_COOKIE_SECURE = True')
                 fp.write('\\n')
