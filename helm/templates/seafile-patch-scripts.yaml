@@ -137,7 +137,7 @@ data:
         """
         Patch setup-seafile-mysql.py to:
         1. Disable MySQL host validation
-        2. Replace the generate method with custom implementation
+        2. Modify the generate method to add custom settings
         """
         script_path = get_script('setup-seafile-mysql.py')
 
@@ -156,16 +156,11 @@ data:
             content
         )
 
-        # Patch 2: Replace the entire generate method
-        # Use proper escaping: \\\\n becomes \\n in file, which Python interprets as newline
-        new_generate = """    def generate(self):
-            '''Generating seahub_settings.py'''
-            print('Generating seahub configuration ...\\\\n')
-            with open(self.seahub_settings_py, 'w') as fp:
-                self.write_utf8_comment(fp)
-                fp.write('\\\\n')
-                self.write_secret_key(fp)
-                fp.write('\\\\n')
+        # Patch 2: Add custom settings to the generate method
+        # Instead of replacing the entire method, we'll add our settings before write_database_config
+        # Find: self.write_database_config(fp)
+        # Add our custom settings before it
+        custom_settings = """fp.write('\\\\n')
                 fp.write('SERVICE_URL = "%s://%s"' % (self.get_proto(), ccnet_config.ip_or_domain))
                 fp.write('\\\\n')
                 fp.write('ALLOWED_HOSTS = [\\\\\'%s\\\\\']' % ccnet_config.ip_or_domain)
@@ -175,11 +170,15 @@ data:
                 fp.write('CSRF_COOKIE_SECURE = True')
                 fp.write('\\\\n')
                 fp.write('SECURE_PROXY_SSL_HEADER = (\\\\\'HTTP_X_FORWARDED_PROTO\\\\\', \\\\\'https\\\\\')')
-                self.write_database_config(fp)"""
+                fp.write('\\\\n')
+                """
 
-        # Replace from 'def generate(self):' to the next method at same indentation level
-        pattern = r'    def generate\(self\):.*?(?=\n    def |\nclass |\Z)'
-        content = re.sub(pattern, new_generate, content, flags=re.DOTALL)
+        # Insert our custom settings before self.write_database_config(fp)
+        content = re.sub(
+            r'(\s+)(self\.write_database_config\(fp\))',
+            custom_settings + r'\1\2',
+            content
+        )
 
         with open(script_path, 'w') as f:
             f.write(content)
@@ -289,3 +288,4 @@ data:
         non_root = os.getenv('NON_ROOT', default='') == 'true'
         if non_root:
             call('chmod -R a+rwx /shared/seafile/')
+
