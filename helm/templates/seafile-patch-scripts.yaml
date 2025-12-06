@@ -183,7 +183,7 @@ data:
                 'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
             },
         }
-        COMPRESS_CACHE_BACKEND = 'default'
+    COMPRESS_CACHE_BACKEND = 'default'
         """
             )
             fp.write('\n')
