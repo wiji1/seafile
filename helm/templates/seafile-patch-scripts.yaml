@@ -157,28 +157,25 @@ data:
         )
 
         # Patch 2: Replace the entire generate method
-        # Build the new method as a list of lines to avoid quote escaping issues
-        new_generate_lines = [
-            "    def generate(self):",
-            "        '''Generating seahub_settings.py'''",
-            "        print('Generating seahub configuration ...\\n')",
-            "        with open(self.seahub_settings_py, 'w') as fp:",
-            "            self.write_utf8_comment(fp)",
-            "            fp.write('\\n')",
-            "            self.write_secret_key(fp)",
-            "            fp.write('\\n')",
-            "            fp.write('SERVICE_URL = \"%s://%s\"' % (self.get_proto(), ccnet_config.ip_or_domain))",
-            "            fp.write('\\n')",
-            "            fp.write('ALLOWED_HOSTS = [\\'%s\\']' % ccnet_config.ip_or_domain)",
-            "            fp.write('\\n')",
-            "            fp.write('CSRF_TRUSTED_ORIGINS = \"[\\'%s://%s\\']\"' % (self.get_proto(), ccnet_config.ip_or_domain))",
-            "            fp.write('\\n')",
-            "            fp.write('CSRF_COOKIE_SECURE = True')",
-            "            fp.write('\\n')",
-            "            fp.write('SECURE_PROXY_SSL_HEADER = (\\'HTTP_X_FORWARDED_PROTO\\', \\'https\\')')",
-            "            self.write_database_config(fp)"
-        ]
-        new_generate = '\n'.join(new_generate_lines)
+        # Use proper escaping: \\\\n becomes \\n in file, which Python interprets as newline
+        new_generate = """    def generate(self):
+            '''Generating seahub_settings.py'''
+            print('Generating seahub configuration ...\\\\n')
+            with open(self.seahub_settings_py, 'w') as fp:
+                self.write_utf8_comment(fp)
+                fp.write('\\\\n')
+                self.write_secret_key(fp)
+                fp.write('\\\\n')
+                fp.write('SERVICE_URL = "%s://%s"' % (self.get_proto(), ccnet_config.ip_or_domain))
+                fp.write('\\\\n')
+                fp.write('ALLOWED_HOSTS = [\\\\\'%s\\\\\']' % ccnet_config.ip_or_domain)
+                fp.write('\\\\n')
+                fp.write('CSRF_TRUSTED_ORIGINS = "[\\\\\'%s://%s\\\\\']"' % (self.get_proto(), ccnet_config.ip_or_domain))
+                fp.write('\\\\n')
+                fp.write('CSRF_COOKIE_SECURE = True')
+                fp.write('\\\\n')
+                fp.write('SECURE_PROXY_SSL_HEADER = (\\\\\'HTTP_X_FORWARDED_PROTO\\\\\', \\\\\'https\\\\\')')
+                self.write_database_config(fp)"""
 
         # Replace from 'def generate(self):' to the next method at same indentation level
         pattern = r'    def generate\(self\):.*?(?=\n    def |\nclass |\Z)'
