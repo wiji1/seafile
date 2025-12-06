@@ -174,7 +174,7 @@ data:
                 fp.write('\\n')
                 fp.write('ALLOWED_HOSTS = [\\\'%s\\\']' % ccnet_config.ip_or_domain)
                 fp.write('\\n')
-                fp.write('CSRF_TRUSTED_ORIGINS = "[\\\'%s://%s\\\']"' % (self.get_proto(), ccnet_config.ip_or_domain))
+                fp.write('CSRF_TRUSTED_ORIGINS = [\\\'%s://%s\\\']' % (self.get_proto(), ccnet_config.ip_or_domain))
                 fp.write('\\n')
                 fp.write('CSRF_COOKIE_SECURE = True')
                 fp.write('\\n')
