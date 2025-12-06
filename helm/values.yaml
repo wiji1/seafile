@@ -23,8 +23,6 @@ seafile:
       value: "files.wiji.dev"
     - name: FORCE_HTTPS_IN_CONF
       value: "true"
-    - name: SEAFILE_SERVER_LETSENCRYPT
-      value: "true"
   extraVolumes: []
 
   ingress:
