@@ -174,19 +174,28 @@ data:
 
         domain = get_conf('SEAFILE_SERVER_HOSTNAME', 'seafile.example.com')
         proto = get_proto()
+
         with open(join(topdir, 'conf', 'seahub_settings.py'), 'a+') as fp:
             fp.write('\n')
-            fp.write("""CACHES = {
-    'default': {
-    'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-    },
-    }
-            COMPRESS_CACHE_BACKEND = 'default'""")
+            fp.write(
+                """CACHES = {
+            'default': {
+                'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+            },
+        }
+        COMPRESS_CACHE_BACKEND = 'default'
+        """
+            )
             fp.write('\n')
-            fp.write("TIME_ZONE = '{time_zone}'".format(time_zone=os.getenv('TIME_ZONE',default='Etc/UTC')))
+            fp.write(
+                "TIME_ZONE = '{time_zone}'".format(
+                    time_zone=os.getenv('TIME_ZONE', default='Etc/UTC')
+                )
+            )
             fp.write('\n')
             fp.write('FILE_SERVER_ROOT = "{proto}://{domain}/seafhttp"'.format(proto=proto, domain=domain))
             fp.write('\n')
+
 
         # Disabled the Elasticsearch process on Seafile-container
         # Connection to the Elasticsearch-container

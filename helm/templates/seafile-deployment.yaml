@@ -52,6 +52,13 @@ spec:
             - name: seafile-data
               mountPath: /shared
 
+            # Only override individual files, not the whole /scripts folder
+            - name: seafile-patch-volume
+              mountPath: /scripts/bootstrap.py
+              subPath: bootstrap.py
+            - name: seafile-patch-volume
+              mountPath: /scripts/setup-seafile-mysql.py
+              subPath: setup-seafile-mysql.py
 
             {{- range .Values.seafile.extraVolumes }}
             - name: {{ .name }}
@@ -73,6 +80,15 @@ spec:
         - name: seafile-data
           persistentVolumeClaim:
             claimName: seafile-data
+
+        - name: seafile-patch-volume
+          configMap:
+            name: seafile-patch-scripts
+            items:
+              - key: bootstrap.py
+                path: bootstrap.py
+              - key: setup-seafile-mysql.py
+                path: setup-seafile-mysql.py
 
         {{- range .Values.seafile.extraVolumes }}
         - name: {{ .name }}
