@@ -4,6 +4,7 @@ metadata:
   name: mysql-init-script
 data:
   init.sql: |
+    ALTER USER 'seafile'@'%' IDENTIFIED WITH mysql_native_password BY '${SEAFILE_MYSQL_DB_PASSWORD}';
     CREATE USER IF NOT EXISTS 'seafile'@'%' IDENTIFIED WITH mysql_native_password BY '${SEAFILE_MYSQL_DB_PASSWORD}';
     GRANT ALL PRIVILEGES ON ccnet_db.* TO 'seafile'@'%';
     GRANT ALL PRIVILEGES ON seafile_db.* TO 'seafile'@'%';
