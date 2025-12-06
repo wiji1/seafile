@@ -57,7 +57,7 @@ spec:
               mountPath: /scripts/bootstrap.py
               subPath: bootstrap.py
             - name: seafile-patch-volume
-              mountPath: /scripts/setup-seafile-mysql.py
+              mountPath: /opt/seafile/seafile-server-11.0.13/setup-seafile-mysql.py
               subPath: setup-seafile-mysql.py
 
             {{- range .Values.seafile.extraVolumes }}
