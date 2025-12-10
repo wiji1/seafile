@@ -1,4 +1,4 @@
-{{- if include "seafile.seafileDataVolume.enabled" . | eq "true" }}
+{{- if .Values.seafile.persistence.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -8,8 +8,8 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{ include "seafile.seafileDataVolume.storage" . }}
-  {{- if and .Values.seafile.configs.seafileDataVolume .Values.seafile.configs.seafileDataVolume.storageClassName }}
-  storageClassName: {{ .Values.seafile.configs.seafileDataVolume.storageClassName }}
+      storage: {{ .Values.seafile.persistence.size }}
+  {{- if .Values.seafile.persistence.storageClassName }}
+  storageClassName: {{ .Values.seafile.persistence.storageClassName }}
   {{- end }}
 {{- end }}

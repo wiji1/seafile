@@ -9,4 +9,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 8Gi
+      storage: {{ .Values.mysql.persistence.size }}
+  {{- if .Values.mysql.persistence.storageClassName }}
+  storageClassName: {{ .Values.mysql.persistence.storageClassName }}
+  {{- end }}

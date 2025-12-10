@@ -5,7 +5,7 @@ metadata:
 data:
   my.cnf: |
     [mysqld]
-    default-authentication-plugin=mysql_native_password
+    default-authentication-plugin={{ .Values.mysql.config.defaultAuthenticationPlugin }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: mysql:8.0
+        image: {{ .Values.mysql.image }}
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
@@ -34,9 +34,9 @@ spec:
               name: seafile-secret
               key: INIT_SEAFILE_MYSQL_ROOT_PASSWORD
         - name: MYSQL_DATABASE
-          value: seafile
+          value: {{ .Values.mysql.database }}
         - name: MYSQL_USER
-          value: seafile
+          value: {{ .Values.mysql.user }}
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -52,13 +52,10 @@ spec:
         - name: mysql-config
           mountPath: /etc/mysql/conf.d
           readOnly: true
+        {{- if .Values.mysql.resources }}
         resources:
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
+          {{- toYaml .Values.mysql.resources | nindent 10 }}
+        {{- end }}
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:

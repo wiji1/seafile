@@ -4,8 +4,10 @@ metadata:
   name: seafile-ingress
   labels:
     app: seafile
+  {{- if .Values.seafile.ingress.annotations }}
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    {{- toYaml .Values.seafile.ingress.annotations | nindent 4 }}
+  {{- end }}
 spec:
   ingressClassName: {{ .Values.seafile.ingress.ingressClassName }}
   rules:

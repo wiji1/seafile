@@ -1,11 +1,16 @@
 seafile:
-  initMode: false
-  configs:
-    image: seafileltd/seafile-mc
-  secretsMap: {} # seafile services secrets env, object
+  # Image configuration
+  image: seafileltd/seafile-mc
+  replicas: 1
 
-  # extra infomations object(frontend, backend)
-  extraResources: {}
+  # Init container configuration
+  initContainer:
+    image: busybox
+
+  # Resources
+  resources: {}
+
+  # Extra environment variables
   extraEnv:
     - name: SEAFILE_MYSQL_DB_PASSWORD
       valueFrom:
@@ -25,21 +30,25 @@ seafile:
       value: "true"
   extraVolumes: []
 
+  # Persistent volume configuration
+  persistence:
+    enabled: true
+    storageClassName: ""
+    size: 10Gi
+
+  # Ingress configuration
   ingress:
     ingressClassName: traefik
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
 
-  config:
-    seafileDataVolume:
-      enabled: true
-      disablePVC: false
+  # Main environment variables
   env:
     SEAFILE_SERVER_HOSTNAME: "files.wiji.dev"
     SEAFILE_SERVER_PROTOCOL: "https"
     DB_HOST: "seafile-mysql"
     SEAFILE_MYSQL_DB_HOST: "seafile-mysql"
     REDIS_HOST: "127.0.0.1"
-    CLUSTER_INIT_ES_HOST: "127.0.0.1"
-
     INIT_SEAFILE_ADMIN_EMAIL: "admin@seafile.example.com"
 
   # Default
@@ -116,3 +125,27 @@ seafile:
     ## for Seafile admin
     - name: INIT_SEAFILE_ADMIN_EMAIL
       initValue: true
+
+# MySQL configuration
+mysql:
+  image: mysql:8.0
+  database: seafile
+  user: seafile
+
+  # Persistent volume configuration
+  persistence:
+    size: 8Gi
+    storageClassName: ""
+
+  # Resource limits
+  resources:
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+
+  # MySQL configuration
+  config:
+    defaultAuthenticationPlugin: mysql_native_password

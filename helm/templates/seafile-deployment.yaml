@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: seafile
 spec:
-  replicas: 1
+  replicas: {{ .Values.seafile.replicas }}
   selector:
     matchLabels:
       app: seafile
@@ -13,10 +13,10 @@ spec:
         app: seafile
     spec:
       enableServiceLinks: false
-      {{- if eq (include "seafile.seafileDataVolume.enabled" . | trim) "true" }}
+      {{- if .Values.seafile.persistence.enabled }}
       initContainers:
         - name: set-ownership
-          image: busybox
+          image: {{ .Values.seafile.initContainer.image }}
           command: ['sh', '-c', 'chown -R root:root /shared']
           volumeMounts:
             - name: seafile-data
@@ -47,7 +47,7 @@ spec:
           ports:
             - containerPort: 80
 
-          {{- if eq (include "seafile.seafileDataVolume.enabled" . | trim) "true" }}
+          {{- if .Values.seafile.persistence.enabled }}
           volumeMounts:
             - name: seafile-data
               mountPath: /shared
@@ -68,10 +68,12 @@ spec:
             {{- end }}
           {{- end }}
 
+          {{- if .Values.seafile.resources }}
           resources:
             {{- toYaml .Values.seafile.resources | nindent 12 }}
+          {{- end }}
 
-      {{- if eq (include "seafile.seafileDataVolume.enabled" . | trim) "true" }}
+      {{- if .Values.seafile.persistence.enabled }}
       volumes:
         - name: seafile-data
           persistentVolumeClaim:
